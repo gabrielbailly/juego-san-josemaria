@@ -99,6 +99,14 @@
         .music-btn:hover {
             background: #e2e8f0;
         }
+
+        .admin-input {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            color: #0f172a;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col bg-animate">
@@ -116,30 +124,25 @@
                  class="profile-img">
             
             <h1 class="text-3xl font-black mb-2 text-[#46178f]">San Josemaría</h1>
-            <p class="text-lg mb-6 font-medium text-slate-600">"El santo de lo ordinario"</p>
+            <p id="subtitle" class="text-lg mb-6 font-medium text-slate-600">"El santo de lo ordinario"</p>
 
-            <div class="mb-6 text-left">
-                <p class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3 text-center">Elige una categoría</p>
-                <div class="grid gap-3">
-                    <button type="button" data-category="vida" onclick="selectCategory('vida')" class="category-btn w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 px-4 rounded-xl transition-all text-left">
-                        Vida
-                    </button>
-                    <button type="button" data-category="escritos" onclick="selectCategory('escritos')" class="category-btn w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 px-4 rounded-xl transition-all text-left">
-                        Escritos
-                    </button>
-                    <button type="button" data-category="centenario" onclick="selectCategory('centenario')" class="category-btn w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 px-4 rounded-xl transition-all text-left">
-                        Camino al Centenario
-                    </button>
-                </div>
+            <div id="language-section" class="mb-6">
+                <p id="language-label" class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">Elige un idioma</p>
+                <div id="language-buttons" class="grid grid-cols-2 gap-2"></div>
             </div>
-             
+
+            <div id="category-section" class="mb-6 text-left">
+                <p id="category-label" class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3 text-center">Elige una categoría</p>
+                <div id="category-buttons" class="grid gap-3"></div>
+            </div>
+              
             <button id="start-btn" onclick="startGame()" disabled class="w-full bg-slate-300 text-white font-bold py-4 rounded-xl text-xl transition-all shadow-lg cursor-not-allowed">
                 ¡EMPEZAR!
             </button>
             
             <div class="mt-8 pt-6 border-t border-slate-100">
                 <p class="text-[10px] text-center text-slate-400 leading-relaxed uppercase tracking-wider font-bold">
-                    Juego para celebrar la fiesta de san Josemaría<br>(26 de junio)
+                    <span id="footer-text">Juego para celebrar la fiesta de san Josemaría</span><br><span id="footer-date">(26 de junio)</span>
                 </p>
             </div>
         </div>
@@ -149,7 +152,7 @@
     <div id="game-screen" class="hidden flex-grow flex flex-col">
         <div class="bg-white text-slate-800 p-4 flex justify-between items-center shadow-md">
             <div class="flex items-center gap-3">
-                <button onclick="goHome()" class="bg-[#e21b3c] text-white font-bold py-2 px-3 rounded-lg shadow-md text-sm md:text-base">Salir</button>
+                <button id="exit-btn" onclick="goHome()" class="bg-[#e21b3c] text-white font-bold py-2 px-3 rounded-lg shadow-md text-sm md:text-base">Salir</button>
                 <div class="font-bold text-lg md:text-xl text-[#46178f]">Q <span id="current-q-num">1</span>/<span id="total-q-count">15</span></div>
             </div>
             
@@ -170,7 +173,7 @@
 
         <div class="flex-grow flex flex-col items-center justify-center p-6 text-center">
             <a id="article-link" href="https://opusdei.org/es/article/mensaje-del-prelado-19-marzo-2026-centenario/" target="_blank" rel="noopener noreferrer" class="hidden mb-6 bg-white text-[#46178f] font-bold py-3 px-5 rounded-xl shadow-lg underline decoration-[#d89e00] decoration-4 underline-offset-4">
-                Mensaje del Prelado Camino al centenario
+                <span id="article-link-text">Mensaje del Prelado Camino al centenario</span>
             </a>
             <h2 id="question-text" class="text-2xl md:text-4xl font-black mb-8 drop-shadow-lg"></h2>
             
@@ -201,7 +204,7 @@
             <div id="feedback-icon" class="text-6xl mb-4"></div>
             <h2 id="feedback-title" class="text-3xl font-black mb-2 text-slate-800"></h2>
             <p id="feedback-points" class="text-xl font-bold text-slate-600 mb-6"></p>
-            <button onclick="nextQuestion()" class="w-full bg-[#1368ce] text-white font-bold py-3 rounded-xl shadow-lg">Siguiente</button>
+            <button id="next-btn" onclick="nextQuestion()" class="w-full bg-[#1368ce] text-white font-bold py-3 rounded-xl shadow-lg">Siguiente</button>
         </div>
     </div>
 
@@ -209,15 +212,100 @@
     <div id="end-screen" class="hidden flex-grow flex flex-col items-center justify-center p-6 text-center">
         <h1 class="text-5xl font-black mb-8">¡Excelente!</h1>
         <div class="bg-white p-8 rounded-3xl shadow-2xl text-slate-800 max-w-md w-full">
-            <p class="text-2xl mb-2">Has obtenido:</p>
+            <p id="final-label" class="text-2xl mb-2">Has obtenido:</p>
             <div class="text-6xl font-black text-[#46178f] mb-6" id="final-score">0</div>
             <p id="rank-message" class="text-lg font-medium mb-6 italic"></p>
-            <button onclick="goHome()" class="w-full bg-[#e21b3c] text-white font-bold py-4 rounded-xl text-xl shadow-lg">Volver al inicio</button>
+            <button id="home-btn" onclick="goHome()" class="w-full bg-[#e21b3c] text-white font-bold py-4 rounded-xl text-xl shadow-lg">Volver al inicio</button>
+        </div>
+    </div>
+
+    <!-- Pantalla Admin -->
+    <div id="admin-screen" class="hidden flex-grow p-6 text-slate-800">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-6xl mx-auto p-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                <div>
+                    <h1 class="text-3xl font-black text-[#46178f]">Administración</h1>
+                    <p class="text-slate-500">Edita preguntas, visibilidad y CSV. Los cambios se guardan en este navegador.</p>
+                </div>
+                <a href="./" class="bg-[#46178f] text-white font-bold py-3 px-4 rounded-xl text-center">Ver juego</a>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4 mb-6">
+                <div class="border rounded-2xl p-4">
+                    <h2 class="font-black text-xl mb-3">Visibilidad</h2>
+                    <p class="font-bold mb-2">Categorías visibles</p>
+                    <div id="admin-category-visibility" class="space-y-2 mb-4"></div>
+                    <p class="font-bold mb-2">Idiomas visibles y orden</p>
+                    <div id="admin-language-visibility" class="space-y-2"></div>
+                    <p class="text-xs text-slate-500 mt-2">Arrastra los idiomas para cambiar el orden en la página de inicio.</p>
+                </div>
+                <div class="border rounded-2xl p-4">
+                    <h2 class="font-black text-xl mb-3">CSV</h2>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="exportCsv()" class="bg-[#26890c] text-white font-bold py-2 px-4 rounded-lg">Exportar CSV</button>
+                        <label class="bg-[#1368ce] text-white font-bold py-2 px-4 rounded-lg cursor-pointer">Importar CSV<input type="file" accept=".csv,text/csv" class="hidden" onchange="importCsv(event)"></label>
+                        <button onclick="resetAdminData()" class="bg-[#e21b3c] text-white font-bold py-2 px-4 rounded-lg">Restaurar inicial</button>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-3">Formato: language, category, question, option1, option2, option3, option4, correct.</p>
+                    <p class="text-xs text-slate-500 mt-1">Para usarlo como banco definitivo en el servidor, sube el CSV exportado como <strong>questions.csv</strong> en la misma carpeta que <strong>index.html</strong>.</p>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4 mb-4">
+                <label class="font-bold">Idioma
+                    <select id="admin-language" class="admin-input mt-1" onchange="renderAdminQuestions()"></select>
+                </label>
+                <label class="font-bold">Categoría
+                    <select id="admin-category" class="admin-input mt-1" onchange="renderAdminQuestions()"></select>
+                </label>
+                <div class="flex items-end">
+                    <button onclick="saveAdminQuestions()" class="w-full bg-[#46178f] text-white font-bold py-3 px-4 rounded-xl">Guardar preguntas</button>
+                </div>
+            </div>
+
+            <div id="admin-questions" class="space-y-4"></div>
         </div>
     </div>
 
     <script>
-        const questionBanks = {
+        const STORAGE_KEY = 'sanJosemariaQuizAdminDataV1';
+        const SETTINGS_KEY = 'sanJosemariaQuizAdminSettingsV1';
+        const CSV_SOURCE = 'questions.csv';
+        const languages = {
+            es: 'Español',
+            en: 'English',
+            sk: 'Slovenčina',
+            sl: 'Slovenščina',
+            ptBR: 'Português BR',
+            fr: 'Français'
+        };
+        const languageFlags = {
+            es: '🇪🇸',
+            en: '🇬🇧',
+            sk: '🇸🇰',
+            sl: '🇸🇮',
+            ptBR: '🇧🇷',
+            fr: '🇫🇷'
+        };
+        const categories = ['vida', 'escritos', 'centenario'];
+        const categoryLabels = {
+            es: { vida: 'Vida', escritos: 'Escritos', centenario: 'Camino al Centenario' },
+            en: { vida: 'Life', escritos: 'Writings', centenario: 'Road to the Centenary' },
+            sk: { vida: 'Život', escritos: 'Spisy', centenario: 'Cesta k storočnici' },
+            sl: { vida: 'Življenje', escritos: 'Spisi', centenario: 'Pot do stoletnice' },
+            ptBR: { vida: 'Vida', escritos: 'Escritos', centenario: 'Caminho para o Centenário' },
+            fr: { vida: 'Vie', escritos: 'Écrits', centenario: 'Chemin vers le Centenaire' }
+        };
+        const uiText = {
+            es: { subtitle: '"El santo de lo ordinario"', language: 'Elige un idioma', category: 'Elige una categoría', start: '¡EMPEZAR!', footer: 'Juego para celebrar la fiesta de san Josemaría', date: '(26 de junio)', exit: 'Salir', next: 'Siguiente', score: 'Puntos', final: 'Has obtenido:', home: 'Volver al inicio', correct: '¡Correcto!', wrong: '¡Incorrecto!', timeout: '¡Tiempo!', keepTrying: 'Sigue intentándolo.', great: '¡Excelente! Has respondido con mucha precisión.', good: '¡Muy bien! Conoces bien a san Josemaría.', learn: '¡Sigue aprendiendo! Hay mucho por descubrir.', article: 'Mensaje del Prelado Camino al centenario' },
+            en: { subtitle: '"The saint of ordinary life"', language: 'Choose a language', category: 'Choose a category', start: 'START!', footer: 'Game to celebrate the feast of Saint Josemaría', date: '(June 26)', exit: 'Exit', next: 'Next', score: 'Score', final: 'You scored:', home: 'Back to start', correct: 'Correct!', wrong: 'Incorrect!', timeout: 'Time is up!', keepTrying: 'Keep trying.', great: 'Excellent! You answered very accurately.', good: 'Very good! You know Saint Josemaría well.', learn: 'Keep learning! There is much to discover.', article: 'Message of the Prelate Road to the Centenary' },
+            sk: { subtitle: '"Svätec všedného života"', language: 'Vyber jazyk', category: 'Vyber kategóriu', start: 'ZAČAŤ!', footer: 'Hra na oslavu sviatku svätého Josemaríu', date: '(26. júna)', exit: 'Odísť', next: 'Ďalej', score: 'Body', final: 'Získal si:', home: 'Späť na začiatok', correct: 'Správne!', wrong: 'Nesprávne!', timeout: 'Čas vypršal!', keepTrying: 'Skús to znova.', great: 'Výborne! Odpovedal si veľmi presne.', good: 'Veľmi dobre! Poznáš svätého Josemaríu.', learn: 'Uč sa ďalej! Je ešte veľa čo objaviť.', article: 'Posolstvo preláta Cesta k storočnici' },
+            sl: { subtitle: '"Svetnik vsakdanjega življenja"', language: 'Izberi jezik', category: 'Izberi kategorijo', start: 'ZAČNI!', footer: 'Igra ob prazniku svetega Jožefmarija', date: '(26. junij)', exit: 'Izhod', next: 'Naprej', score: 'Točke', final: 'Dosegel si:', home: 'Nazaj na začetek', correct: 'Pravilno!', wrong: 'Napačno!', timeout: 'Čas je potekel!', keepTrying: 'Poskusi znova.', great: 'Odlično! Odgovarjal si zelo natančno.', good: 'Zelo dobro! Dobro poznaš svetega Jožefmarija.', learn: 'Uči se naprej! Veliko je še za odkriti.', article: 'Sporočilo prelata Pot do stoletnice' },
+            ptBR: { subtitle: '"O santo do cotidiano"', language: 'Escolha um idioma', category: 'Escolha uma categoria', start: 'COMEÇAR!', footer: 'Jogo para celebrar a festa de São Josemaria', date: '(26 de junho)', exit: 'Sair', next: 'Próxima', score: 'Pontos', final: 'Você obteve:', home: 'Voltar ao início', correct: 'Correto!', wrong: 'Incorreto!', timeout: 'Tempo esgotado!', keepTrying: 'Continue tentando.', great: 'Excelente! Você respondeu com muita precisão.', good: 'Muito bem! Você conhece bem São Josemaria.', learn: 'Continue aprendendo! Há muito para descobrir.', article: 'Mensagem do Prelado Caminho para o centenário' },
+            fr: { subtitle: '"Le saint de la vie ordinaire"', language: 'Choisis une langue', category: 'Choisis une catégorie', start: 'COMMENCER !', footer: 'Jeu pour célébrer la fête de saint Josémaria', date: '(26 juin)', exit: 'Sortir', next: 'Suivant', score: 'Points', final: 'Tu as obtenu :', home: 'Retour à l’accueil', correct: 'Correct !', wrong: 'Incorrect !', timeout: 'Temps écoulé !', keepTrying: 'Continue à essayer.', great: 'Excellent ! Tu as répondu avec beaucoup de précision.', good: 'Très bien ! Tu connais bien saint Josémaria.', learn: 'Continue à apprendre ! Il y a beaucoup à découvrir.', article: 'Message du Prélat Chemin vers le centenaire' }
+        };
+
+        const spanishBanks = {
             vida: [
             { q: "¿En qué año nació San Josemaría?", options: ["1902", "1928", "1898", "1910"], correct: 0 },
             { q: "¿En qué ciudad nació?", options: ["Barbastro", "Madrid", "Zaragoza", "Logroño"], correct: 0 },
@@ -271,8 +359,229 @@
             ]
         };
 
+        const translatedBanks = {
+            en: {
+                vida: [
+                    q('In what year was Saint Josemaría born?', ['1902', '1928', '1898', '1910']), q('In which city was he born?', ['Barbastro', 'Madrid', 'Zaragoza', 'Logroño']), q('What were his parents called?', ['José and Dolores', 'Juan and María', 'Francisco and Carmen', 'Santiago and Josefa']), q('Where did his mother take him to give thanks for his recovery as a child?', ['Torreciudad', 'El Pilar', 'Fatima', 'Lourdes']), q('What is the name of his younger brother?', ['Santiago', 'Juan', 'Luis', 'Francisco']), q('What did he see in Logroño that made him think God wanted something from him?', ['The footprints of a Carmelite in the snow', 'A light in the church', 'A beggar asking for help', 'A vision of angels']), q('Where did he celebrate his first Mass?', ['At El Pilar in Zaragoza', 'In Barbastro', 'In Madrid', 'In Rome']), q('On what date did he receive the inspiration to found the Work?', ['October 2', 'February 14', 'June 26', 'January 9']), q('To whom did Saint Josemaría teach catechism in his first years in Madrid?', ['Poor children', 'University students', 'Priests', 'Soldiers']), q('On what date did he die in Rome?', ['June 26, 1975', 'October 2, 1928', 'January 9, 1902', 'February 14, 1930']), q('Where do his remains currently rest?', ['Saint Mary of Peace (Rome)', 'Almudena Cathedral', 'Saint Peter’s Basilica', 'Zaragoza Cathedral']), q('Which Pope declared him a saint?', ['John Paul II', 'John XXIII', 'Paul VI', 'Benedict XVI']), q('In what year was he canonized?', ['2002', '1975', '1992', '2010']), q('What is the core of the Opus Dei charism?', ['Holiness in the middle of the world', 'Living in a convent', 'Only saying vocal prayers', 'Going far away on missions']), q('What does being a good Christian mean according to his message?', ['Doing things for love of God', 'Only going to Mass', 'Being very serious', 'Knowing a lot of theology'])
+                ],
+                escritos: [
+                    q('What was the first book published by Saint Josemaría?', ['Holy Rosary', 'The Way', 'The Forge', 'Friends of God']), q('Which book by Saint Josemaría contains 999 points for meditation?', ['The Way', 'Furrow', 'The Forge', 'The Way of the Cross']), q('Which trilogy of short books gathers points for personal prayer?', ['The Way, Furrow and The Forge', 'Conversations, The Way and Holy Rosary', 'Friends of God, Furrow and The Way of the Cross', 'The Forge, Christ Is Passing By and In Love with the Church']), q('Which work comments on the mysteries of the Rosary?', ['Holy Rosary', 'The Way', 'The Forge', 'Conversations']), q('Which book gathers homilies on feasts and liturgical seasons?', ['Christ Is Passing By', 'The Way', 'The Abbess of Las Huelgas', 'Holy Rosary']), q('Which book gathers homilies for ordinary Christian life?', ['Friends of God', 'Furrow', 'The Way of the Cross', 'Conversations']), q('Which work presents interviews with Saint Josemaría about Opus Dei and the Church?', ['Conversations', 'The Forge', 'The Way', 'Holy Rosary']), q('Which book by Saint Josemaría invites meditation on the stations of the Passion?', ['The Way of the Cross', 'Furrow', 'Friends of God', 'Christ Is Passing By']), q('What famous expression appears at the beginning of The Way?', ['May your life not be a barren life', 'All the paths of the earth', 'Rekindle the gift of God', 'The man with the permanent smile']), q('What theme is central in many writings of Saint Josemaría?', ['The sanctification of ordinary work', 'Withdrawal from the world', 'Politics as the main goal', 'Personal fame']), q('Which book arose from spiritual notes and considerations written over many years?', ['The Way', 'The Abbess of Las Huelgas', 'In Love with the Church', 'Conversations']), q('Which work deals especially with love for the Church?', ['In Love with the Church', 'The Forge', 'Holy Rosary', 'Furrow']), q('Which book was published posthumously and forms part of the trilogy with The Way and Furrow?', ['The Forge', 'Holy Rosary', 'Conversations', 'The Abbess of Las Huelgas']), q('What historical research work did Saint Josemaría write?', ['The Abbess of Las Huelgas', 'The Way', 'Furrow', 'The Way of the Cross']), q('What are the points in The Way, Furrow and The Forge mainly intended for?', ['For prayer and examination of life', 'For studying medieval history', 'For learning music', 'For organizing a library'])
+                ],
+                centenario: [
+                    q('On what date is the Prelate’s message about the Road to the Centenary signed?', ['March 19, 2026', 'October 2, 2028', 'February 14, 2030', 'June 10, 2021']), q('On the occasion of which feast was the message published?', ['The feast of Saint Joseph', 'The feast of Saint Josemaría', 'Christmas', 'The Assumption']), q('How did Saint Josemaría refer to Saint Joseph according to the message?', ['My father and lord', 'My teacher and king', 'My faithful friend', 'My distant protector']), q('What phrase of Saint Josemaría guides the road to the Centenary?', ['Everything has been done and everything remains to be done', 'Duc in altum', 'Ora et labora', 'Peace and good']), q('What period will the Centenary celebration cover?', ['From October 2, 2028 to February 14, 2030', 'From March 19, 2026 to June 26, 2027', 'Only October 2, 2028', 'All of 2026']), q('What does this five-hundred-day period express?', ['The unity of women and men, lay people and priests', 'A change of headquarters', 'An academic congress', 'The end of the mission']), q('What was the theme of the latest Regional Assemblies?', ['Road to the Centenary', 'The history of Rome', 'Family economics', 'Christian art']), q('Which three areas stood out strongly in the contributions?', ['Family, work and formation', 'Sport, study and rest', 'Liturgy, music and architecture', 'Travel, culture and economy']), q('How does the message wish to look at the past and the future?', ['With gratitude, humble examination and hope', 'With nostalgia and fear', 'With indifference', 'With haste and forgetfulness']), q('Whose example does it propose meditating on for spiritual preparation?', ['The first Christians', 'Medieval kings', 'Greek philosophers', 'Explorers']), q('What idea is proposed for deeper study from October 2, 2026 to October 2, 2027?', ['Being contemplatives in the middle of the world', 'Living far from work', 'Changing vocation', 'Studying only old documents']), q('What teaching is proposed to keep more present until the beginning of the Centenary?', ['Friendship and confidence', 'Competition and success', 'Absolute silence', 'Constant improvisation']), q('What are we invited to meditate on from October 2, 2028 to February 14, 2030?', ['Work from the perspective of secularity', 'Monastic life', 'Art history', 'Travel organization']), q('What phrase summarizes Saint Josemaría’s teaching on work?', ['Sanctify work, sanctify ourselves with work, sanctify others through work', 'Work only out of obligation', 'Avoid small tasks', 'Separate faith from daily life']), q('What weapon does the message recall we have had from the beginning of the Work?', ['Prayer', 'Advertising', 'Force', 'Argument'])
+                ]
+            }
+        };
+
+        function q(question, options) {
+            return { q: question, options, correct: 0 };
+        }
+
+        function clone(value) {
+            return JSON.parse(JSON.stringify(value));
+        }
+
+        const localizedBankTables = {
+            sk: `vida|V ktorom roku sa narodil svätý Josemaría?|1902;1928;1898;1910
+vida|V ktorom meste sa narodil?|Barbastro;Madrid;Zaragoza;Logroño
+vida|Ako sa volali jeho rodičia?|José a Dolores;Juan a María;Francisco a Carmen;Santiago a Josefa
+vida|Kam ho matka vzala poďakovať za uzdravenie v detstve?|Torreciudad;El Pilar;Fatima;Lurdy
+vida|Ako sa volal jeho mladší brat?|Santiago;Juan;Luis;Francisco
+vida|Čo videl v Logroñe, čo ho priviedlo k myšlienke, že Boh od neho niečo chce?|Stopy karmelitána v snehu;Svetlo v kostole;Žobráka prosiaceho o pomoc;Videnie anjelov
+vida|Kde slávil svoju prvú omšu?|V bazilike Pilar v Zaragoze;V Barbastre;V Madride;V Ríme
+vida|V ktorý deň prijal osvietenie založiť Dielo?|2. októbra;14. februára;26. júna;9. januára
+vida|Koho učil svätý Josemaría katechizmus v prvých rokoch v Madride?|Chudobné deti;Univerzitných študentov;Kňazov;Vojakov
+vida|V ktorý deň zomrel v Ríme?|26. júna 1975;2. októbra 1928;9. januára 1902;14. februára 1930
+vida|Kde dnes odpočívajú jeho telesné pozostatky?|Panna Mária Pokoja v Ríme;Katedrála Almudena;Bazilika svätého Petra;Katedrála v Zaragoze
+vida|Ktorý pápež ho vyhlásil za svätého?|Ján Pavol II.;Ján XXIII.;Pavol VI.;Benedikt XVI.
+vida|V ktorom roku bol kanonizovaný?|2002;1975;1992;2010
+vida|Čo je jadrom charizmy Opus Dei?|Svätosť uprostred sveta;Život v kláštore;Iba ústna modlitba;Odísť na vzdialené misie
+vida|Čo podľa jeho posolstva znamená byť dobrým kresťanom?|Robiť veci z lásky k Bohu;Iba chodiť na omšu;Byť veľmi vážny;Vedieť veľa teológie
+escritos|Aká bola prvá kniha, ktorú svätý Josemaría vydal?|Svätý ruženec;Cesta;Vyhňa;Boží priatelia
+escritos|Ktorá kniha svätého Josemaríu obsahuje 999 bodov na rozjímanie?|Cesta;Brázda;Vyhňa;Krížová cesta
+escritos|Ktorá trilógia krátkych kníh zhromažďuje body na osobnú modlitbu?|Cesta, Brázda a Vyhňa;Rozhovory, Cesta a Svätý ruženec;Boží priatelia, Brázda a Krížová cesta;Vyhňa, Ísť s Kristom a Milovať Cirkev
+escritos|Ktoré dielo komentuje tajomstvá ruženca?|Svätý ruženec;Cesta;Vyhňa;Rozhovory
+escritos|Ktorá kniha zhromažďuje homílie o sviatkoch a liturgických obdobiach?|Ísť s Kristom;Cesta;Abatyša z Las Huelgas;Svätý ruženec
+escritos|Ktorá kniha zhromažďuje homílie pre bežný kresťanský život?|Boží priatelia;Brázda;Krížová cesta;Rozhovory
+escritos|Ktoré dielo prináša rozhovory so svätým Josemaríom o Opus Dei a Cirkvi?|Rozhovory;Vyhňa;Cesta;Svätý ruženec
+escritos|Ktorá kniha svätého Josemaríu pozýva rozjímať nad zastaveniami Pánovho umučenia?|Krížová cesta;Brázda;Boží priatelia;Ísť s Kristom
+escritos|Ktorý známy výraz sa objavuje na začiatku knihy Cesta?|Nech tvoj život nie je neplodný;Všetky cesty zeme;Oživ Boží dar;Muž stáleho úsmevu
+escritos|Ktorá téma je ústredná v mnohých spisoch svätého Josemaríu?|Posväcovanie obyčajnej práce;Útek zo sveta;Politika ako hlavný cieľ;Osobná sláva
+escritos|Ktorá kniha vznikla z duchovných poznámok a úvah písaných počas rokov?|Cesta;Abatyša z Las Huelgas;Milovať Cirkev;Rozhovory
+escritos|Ktoré dielo sa osobitne venuje láske k Cirkvi?|Milovať Cirkev;Vyhňa;Svätý ruženec;Brázda
+escritos|Ktorá kniha bola vydaná posmrtne a patrí do trilógie s Cestou a Brázdou?|Vyhňa;Svätý ruženec;Rozhovory;Abatyša z Las Huelgas
+escritos|Aké historické výskumné dielo napísal svätý Josemaría?|Abatyša z Las Huelgas;Cesta;Brázda;Krížová cesta
+escritos|Na čo sú určené najmä body v knihách Cesta, Brázda a Vyhňa?|Na modlitbu a spytovanie života;Na štúdium stredovekých dejín;Na učenie hudby;Na usporiadanie knižnice
+centenario|V ktorý deň je podpísané posolstvo preláta o Ceste k storočnici?|19. marca 2026;2. októbra 2028;14. februára 2030;10. júna 2021
+centenario|Pri príležitosti ktorého sviatku bolo posolstvo uverejnené?|Sviatku svätého Jozefa;Sviatku svätého Josemaríu;Vianoc;Nanebovzatia
+centenario|Ako podľa posolstva nazýval svätý Josemaría svätého Jozefa?|Môj otec a pán;Môj učiteľ a kráľ;Môj verný priateľ;Môj vzdialený ochranca
+centenario|Ktorá veta svätého Josemaríu sprevádza cestu k storočnici?|Všetko je hotové a všetko treba ešte urobiť;Duc in altum;Ora et labora;Pokoj a dobro
+centenario|Aké obdobie bude zahŕňať oslava storočnice?|Od 2. októbra 2028 do 14. februára 2030;Od 19. marca 2026 do 26. júna 2027;Iba 2. októbra 2028;Celý rok 2026
+centenario|Čo vyjadruje toto päťstové dňové obdobie?|Jednotu žien a mužov, laikov a kňazov;Zmenu sídla;Akademický kongres;Koniec misie
+centenario|Aká bola téma posledných regionálnych zhromaždení?|Cesta k storočnici;Dejiny Ríma;Rodinné hospodárstvo;Kresťanské umenie
+centenario|Ktoré tri oblasti silno zazneli v príspevkoch?|Rodina, práca a formácia;Šport, štúdium a oddych;Liturgia, hudba a architektúra;Cesty, kultúra a ekonomika
+centenario|Ako chce posolstvo hľadieť na minulosť a budúcnosť?|S vďačnosťou, pokorným skúmaním a nádejou;S nostalgiou a strachom;S ľahostajnosťou;S náhlením a zabudnutím
+centenario|Čí príklad navrhuje rozjímať pri duchovnej príprave?|Prvých kresťanov;Stredovekých kráľov;Gréckych filozofov;Objaviteľov
+centenario|Ktorú myšlienku navrhuje prehĺbiť od 2. októbra 2026 do 2. októbra 2027?|Byť kontemplatívni uprostred sveta;Žiť ďaleko od práce;Zmeniť povolanie;Študovať iba staré dokumenty
+centenario|Ktoré učenie navrhuje mať viac na pamäti do začiatku storočnice?|Priateľstvo a dôvernosť;Súťaž a úspech;Úplné ticho;Stála improvizácia
+centenario|O čom nás pozýva rozjímať od 2. októbra 2028 do 14. februára 2030?|O práci zo sekulárnosti;O mníšskom živote;O dejinách umenia;O organizovaní ciest
+centenario|Ktorá veta zhŕňa učenie svätého Josemaríu o práci?|Posväcovať prácu, posväcovať sa prácou, posväcovať druhých prácou;Pracovať iba z povinnosti;Vyhýbať sa malým úlohám;Oddeľovať vieru od každodenného života
+centenario|Akú zbraň podľa posolstva máme od začiatku Diela?|Modlitbu;Reklamu;Silu;Diskusiu`,
+            sl: `vida|Katerega leta se je rodil sveti Jožefmarija?|1902;1928;1898;1910
+vida|V katerem mestu se je rodil?|Barbastro;Madrid;Zaragoza;Logroño
+vida|Kako sta se imenovala njegova starša?|José in Dolores;Juan in María;Francisco in Carmen;Santiago in Josefa
+vida|Kam ga je mati peljala, da bi se zahvalila za njegovo ozdravitev v otroštvu?|Torreciudad;El Pilar;Fatima;Lurd
+vida|Kako je ime njegovemu mlajšemu bratu?|Santiago;Juan;Luis;Francisco
+vida|Kaj je videl v Logroñu, zaradi česar je pomislil, da Bog od njega nekaj želi?|Sledi karmeličana v snegu;Luč v cerkvi;Berača, ki prosi;Videnje angelov
+vida|Kje je daroval svojo prvo mašo?|V baziliki Pilar v Zaragozi;V Barbastru;V Madridu;V Rimu
+vida|Katerega dne je prejel navdih za ustanovitev Dela?|2. oktobra;14. februarja;26. junija;9. januarja
+vida|Komu je sveti Jožefmarija v prvih letih v Madridu poučeval katekizem?|Revnim otrokom;Univerzitetnim študentom;Duhovnikom;Vojakom
+vida|Katerega dne je umrl v Rimu?|26. junija 1975;2. oktobra 1928;9. januarja 1902;14. februarja 1930
+vida|Kje danes počivajo njegovi posmrtni ostanki?|Sveta Marija miru v Rimu;Katedrala Almudena;Bazilika svetega Petra;Katedrala v Zaragozi
+vida|Kateri papež ga je razglasil za svetnika?|Janez Pavel II.;Janez XXIII.;Pavel VI.;Benedikt XVI.
+vida|Katerega leta je bil kanoniziran?|2002;1975;1992;2010
+vida|Kaj je jedro karizme Opus Dei?|Svetost sredi sveta;Življenje v samostanu;Samo ustna molitev;Odhod na oddaljene misijone
+vida|Kaj po njegovem sporočilu pomeni biti dober kristjan?|Delati stvari iz ljubezni do Boga;Samo hoditi k maši;Biti zelo resen;Veliko vedeti o teologiji
+escritos|Katera je bila prva knjiga, ki jo je objavil sveti Jožefmarija?|Sveti rožni venec;Pot;Kovačnica;Božji prijatelji
+escritos|Katera knjiga svetega Jožefmarija vsebuje 999 točk za premišljevanje?|Pot;Brazda;Kovačnica;Križev pot
+escritos|Katera trilogija kratkih knjig zbira točke za osebno molitev?|Pot, Brazda in Kovačnica;Pogovori, Pot in Sveti rožni venec;Božji prijatelji, Brazda in Križev pot;Kovačnica, Jezus prihaja mimo in Ljubiti Cerkev
+escritos|Katero delo razlaga skrivnosti rožnega venca?|Sveti rožni venec;Pot;Kovačnica;Pogovori
+escritos|Katera knjiga zbira homilije o praznikih in liturgičnih časih?|Jezus prihaja mimo;Pot;Opatinja iz Las Huelgas;Sveti rožni venec
+escritos|Katera knjiga zbira homilije za običajno krščansko življenje?|Božji prijatelji;Brazda;Križev pot;Pogovori
+escritos|Katero delo prinaša intervjuje s svetim Jožefmarijem o Opus Dei in Cerkvi?|Pogovori;Kovačnica;Pot;Sveti rožni venec
+escritos|Katera knjiga svetega Jožefmarija vabi k premišljevanju postaj Gospodovega trpljenja?|Križev pot;Brazda;Božji prijatelji;Jezus prihaja mimo
+escritos|Kateri znani izraz se pojavi na začetku Poti?|Naj tvoje življenje ne bo nerodovitno;Vse poti zemlje;Poživi Božji dar;Mož stalnega nasmeha
+escritos|Katera tema je osrednja v mnogih spisih svetega Jožefmarija?|Posvečevanje običajnega dela;Umaknitev iz sveta;Politika kot glavni cilj;Osebna slava
+escritos|Katera knjiga je nastala iz duhovnih zapiskov in premišljevanj, pisanih skozi leta?|Pot;Opatinja iz Las Huelgas;Ljubiti Cerkev;Pogovori
+escritos|Katero delo se posebej posveča ljubezni do Cerkve?|Ljubiti Cerkev;Kovačnica;Sveti rožni venec;Brazda
+escritos|Katera knjiga je bila izdana posmrtno in spada v trilogijo s Potjo in Brazdo?|Kovačnica;Sveti rožni venec;Pogovori;Opatinja iz Las Huelgas
+escritos|Katero zgodovinsko raziskovalno delo je napisal sveti Jožefmarija?|Opatinja iz Las Huelgas;Pot;Brazda;Križev pot
+escritos|Čemu so namenjene predvsem točke v knjigah Pot, Brazda in Kovačnica?|Moliti in presojati življenje;Študirati srednjeveško zgodovino;Učiti se glasbe;Urediti knjižnico
+centenario|Katerega dne je podpisano sporočilo prelata o Poti do stoletnice?|19. marca 2026;2. oktobra 2028;14. februarja 2030;10. junija 2021
+centenario|Ob katerem prazniku je bilo sporočilo objavljeno?|Ob prazniku svetega Jožefa;Ob prazniku svetega Jožefmarija;Ob božiču;Ob vnebovzetju
+centenario|Kako je po sporočilu sveti Jožefmarija imenoval svetega Jožefa?|Moj oče in gospod;Moj učitelj in kralj;Moj zvesti prijatelj;Moj oddaljeni varuh
+centenario|Kateri stavek svetega Jožefmarija vodi pot do stoletnice?|Vse je narejeno in vse je še treba narediti;Duc in altum;Ora et labora;Mir in dobro
+centenario|Katero obdobje bo zajemalo praznovanje stoletnice?|Od 2. oktobra 2028 do 14. februarja 2030;Od 19. marca 2026 do 26. junija 2027;Samo 2. oktober 2028;Vse leto 2026
+centenario|Kaj izraža to obdobje petsto dni?|Edinost žensk in moških, laikov in duhovnikov;Spremembo sedeža;Akademski kongres;Konec poslanstva
+centenario|Katera je bila tema zadnjih regionalnih zborovanj?|Pot do stoletnice;Zgodovina Rima;Družinska ekonomija;Krščanska umetnost
+centenario|Katera tri področja so posebej močno odmevala v prispevkih?|Družina, delo in formacija;Šport, študij in počitek;Liturgija, glasba in arhitektura;Potovanja, kultura in ekonomija
+centenario|Kako želi sporočilo gledati na preteklost in prihodnost?|S hvaležnostjo, ponižnim izpraševanjem in upanjem;Z nostalgijo in strahom;Z brezbrižnostjo;Z naglico in pozabo
+centenario|Čigav zgled predlaga za premišljevanje pri duhovni pripravi?|Prvih kristjanov;Srednjeveških kraljev;Grških filozofov;Raziskovalcev
+centenario|Katero misel predlaga poglobiti od 2. oktobra 2026 do 2. oktobra 2027?|Biti kontemplativni sredi sveta;Živeti daleč od dela;Spremeniti poklicanost;Študirati samo stare dokumente
+centenario|Kateri nauk predlaga, naj bo bolj navzoč do začetka stoletnice?|Prijateljstvo in zaupnost;Tekmovanje in uspeh;Popolna tišina;Stalna improvizacija
+centenario|O čem smo povabljeni premišljevati od 2. oktobra 2028 do 14. februarja 2030?|O delu iz sekularnosti;O meniškem življenju;O zgodovini umetnosti;O organiziranju potovanj
+centenario|Kateri stavek povzema nauk svetega Jožefmarija o delu?|Posvečevati delo, posvečevati se z delom, posvečevati druge z delom;Delati samo iz dolžnosti;Izogibati se majhnim nalogam;Ločevati vero od vsakdanjega življenja
+centenario|Katero orožje po sporočilu imamo od začetka Dela?|Molitev;Oglaševanje;Silo;Razpravo`,
+            ptBR: `vida|Em que ano São Josemaria nasceu?|1902;1928;1898;1910
+vida|Em que cidade nasceu?|Barbastro;Madri;Zaragoza;Logroño
+vida|Como se chamavam seus pais?|José e Dolores;Juan e María;Francisco e Carmen;Santiago e Josefa
+vida|Aonde sua mãe o levou para agradecer sua cura quando criança?|Torreciudad;El Pilar;Fátima;Lourdes
+vida|Como se chama seu irmão mais novo?|Santiago;Juan;Luis;Francisco
+vida|O que viu em Logroño que o fez pensar que Deus queria algo dele?|As pegadas de um carmelita na neve;Uma luz na igreja;Um mendigo pedindo ajuda;Uma visão de anjos
+vida|Onde celebrou sua primeira missa?|No Pilar de Zaragoza;Em Barbastro;Em Madri;Em Roma
+vida|Em que data recebeu a inspiração para fundar a Obra?|2 de outubro;14 de fevereiro;26 de junho;9 de janeiro
+vida|A quem São Josemaria dava catequese nos primeiros anos em Madri?|A crianças pobres;A universitários;A sacerdotes;A militares
+vida|Em que data faleceu em Roma?|26 de junho de 1975;2 de outubro de 1928;9 de janeiro de 1902;14 de fevereiro de 1930
+vida|Onde repousam atualmente seus restos mortais?|Santa Maria da Paz, em Roma;Catedral da Almudena;Basílica de São Pedro;Catedral de Zaragoza
+vida|Que Papa o declarou santo?|João Paulo II;João XXIII;Paulo VI;Bento XVI
+vida|Em que ano foi canonizado?|2002;1975;1992;2010
+vida|Qual é o núcleo do carisma do Opus Dei?|A santidade no meio do mundo;Viver em um convento;Fazer apenas oração vocal;Ir para missões distantes
+vida|O que significa ser bom cristão segundo sua mensagem?|Fazer as coisas por amor a Deus;Ir apenas à missa;Ser muito sério;Saber muita teologia
+escritos|Qual foi o primeiro livro publicado por São Josemaria?|Santo Rosário;Caminho;Forja;Amigos de Deus
+escritos|Que livro de São Josemaria contém 999 pontos de meditação?|Caminho;Sulco;Forja;Via Sacra
+escritos|Que trilogia de livros breves reúne pontos para a oração pessoal?|Caminho, Sulco e Forja;Entrevistas, Caminho e Santo Rosário;Amigos de Deus, Sulco e Via Sacra;Forja, É Cristo que passa e Amar a Igreja
+escritos|Que obra comenta os mistérios do Rosário?|Santo Rosário;Caminho;Forja;Entrevistas
+escritos|Que livro reúne homilias sobre festas e tempos litúrgicos?|É Cristo que passa;Caminho;A Abadessa de Las Huelgas;Santo Rosário
+escritos|Que livro reúne homilias para a vida cristã cotidiana?|Amigos de Deus;Sulco;Via Sacra;Entrevistas
+escritos|Que obra apresenta entrevistas com São Josemaria sobre o Opus Dei e a Igreja?|Entrevistas;Forja;Caminho;Santo Rosário
+escritos|Que livro de São Josemaria convida a meditar as estações da Paixão?|Via Sacra;Sulco;Amigos de Deus;É Cristo que passa
+escritos|Que expressão famosa aparece no início de Caminho?|Que a tua vida não seja uma vida estéril;Todos os caminhos da terra;Reaviva o dom de Deus;O homem do sorriso permanente
+escritos|Que tema aparece de modo central em muitos escritos de São Josemaria?|A santificação do trabalho ordinário;O afastamento do mundo;A política como fim principal;A fama pessoal
+escritos|Que livro nasceu de notas e considerações espirituais escritas ao longo dos anos?|Caminho;A Abadessa de Las Huelgas;Amar a Igreja;Entrevistas
+escritos|Que obra trata de modo especial do amor à Igreja?|Amar a Igreja;Forja;Santo Rosário;Sulco
+escritos|Que livro foi publicado postumamente e faz parte da trilogia com Caminho e Sulco?|Forja;Santo Rosário;Entrevistas;A Abadessa de Las Huelgas
+escritos|Que obra de pesquisa histórica São Josemaria escreveu?|A Abadessa de Las Huelgas;Caminho;Sulco;Via Sacra
+escritos|Para que servem principalmente os pontos de Caminho, Sulco e Forja?|Para fazer oração e examinar a vida;Para estudar história medieval;Para aprender música;Para organizar uma biblioteca
+centenario|Em que data está assinada a mensagem do Prelado sobre o Caminho para o Centenário?|19 de março de 2026;2 de outubro de 2028;14 de fevereiro de 2030;10 de junho de 2021
+centenario|Por ocasião de que festa a mensagem foi publicada?|A festa de São José;A festa de São Josemaria;O Natal;A Assunção
+centenario|Como São Josemaria chamava São José segundo a mensagem?|Meu pai e senhor;Meu mestre e rei;Meu amigo fiel;Meu protetor distante
+centenario|Que frase de São Josemaria guia o caminho para o Centenário?|Está tudo feito e tudo por fazer;Duc in altum;Ora et labora;Paz e bem
+centenario|Que período abrangerá a celebração do Centenário?|De 2 de outubro de 2028 a 14 de fevereiro de 2030;De 19 de março de 2026 a 26 de junho de 2027;Somente 2 de outubro de 2028;Todo o ano de 2026
+centenario|O que expressa esse período de quinhentos dias?|A unidade de mulheres e homens, leigos e sacerdotes;Uma mudança de sede;Um congresso acadêmico;O fim da missão
+centenario|Qual foi o tema das últimas Assembleias regionais?|Caminho para o Centenário;A história de Roma;A economia familiar;A arte cristã
+centenario|Que três âmbitos ressoaram com especial força nas contribuições?|Família, trabalho e formação;Esporte, estudo e descanso;Liturgia, música e arquitetura;Viagens, cultura e economia
+centenario|Como a mensagem deseja olhar para o passado e para o futuro?|Com gratidão, exame humilde e esperança;Com nostalgia e medo;Com indiferença;Com pressa e esquecimento
+centenario|Que exemplo propõe meditar para a preparação espiritual?|O dos primeiros cristãos;O dos reis medievais;O dos filósofos gregos;O dos exploradores
+centenario|Que ideia se propõe aprofundar entre 2 de outubro de 2026 e 2 de outubro de 2027?|Ser contemplativos no meio do mundo;Viver longe do trabalho;Mudar de vocação;Estudar apenas documentos antigos
+centenario|Que ensinamento se propõe ter mais presente até o início do Centenário?|A amizade e a confidência;A competição e o sucesso;O silêncio absoluto;A improvisação constante
+centenario|Sobre o que somos convidados a meditar de 2 de outubro de 2028 a 14 de fevereiro de 2030?|O trabalho a partir da secularidade;A vida monástica;A história da arte;A organização de viagens
+centenario|Que frase resume o ensinamento de São Josemaria sobre o trabalho?|Santificar o trabalho, santificar-nos com o trabalho, santificar os outros com o trabalho;Trabalhar apenas por obrigação;Evitar as pequenas tarefas;Separar a fé da vida diária
+centenario|Que arma a mensagem recorda que temos desde o começo da Obra?|A oração;A publicidade;A força;A discussão`,
+            fr: `vida|En quelle année saint Josémaria est-il né ?|1902;1928;1898;1910
+vida|Dans quelle ville est-il né ?|Barbastro;Madrid;Saragosse;Logroño
+vida|Comment s’appelaient ses parents ?|José et Dolores;Juan et María;Francisco et Carmen;Santiago et Josefa
+vida|Où sa mère l’a-t-elle emmené pour remercier Dieu de sa guérison lorsqu’il était enfant ?|Torreciudad;El Pilar;Fatima;Lourdes
+vida|Comment s’appelle son petit frère ?|Santiago;Juan;Luis;Francisco
+vida|Qu’a-t-il vu à Logroño qui lui a fait penser que Dieu voulait quelque chose de lui ?|Les traces d’un carme dans la neige;Une lumière dans l’église;Un mendiant qui demandait de l’aide;Une vision d’anges
+vida|Où a-t-il célébré sa première messe ?|Au Pilar de Saragosse;À Barbastro;À Madrid;À Rome
+vida|À quelle date a-t-il reçu l’inspiration de fonder l’Œuvre ?|2 octobre;14 février;26 juin;9 janvier
+vida|À qui saint Josémaria faisait-il le catéchisme pendant ses premières années à Madrid ?|À des enfants pauvres;À des étudiants;À des prêtres;À des militaires
+vida|À quelle date est-il mort à Rome ?|26 juin 1975;2 octobre 1928;9 janvier 1902;14 février 1930
+vida|Où reposent actuellement ses restes ?|Sainte-Marie-de-la-Paix à Rome;Cathédrale de l’Almudena;Basilique Saint-Pierre;Cathédrale de Saragosse
+vida|Quel pape l’a déclaré saint ?|Jean-Paul II;Jean XXIII;Paul VI;Benoît XVI
+vida|En quelle année a-t-il été canonisé ?|2002;1975;1992;2010
+vida|Quel est le cœur du charisme de l’Opus Dei ?|La sainteté au milieu du monde;Vivre dans un couvent;Faire seulement des prières vocales;Partir en missions lointaines
+vida|Que signifie être un bon chrétien selon son message ?|Faire les choses par amour de Dieu;Aller seulement à la messe;Être très sérieux;Connaître beaucoup de théologie
+escritos|Quel fut le premier livre publié par saint Josémaria ?|Saint Rosaire;Chemin;Forge;Amis de Dieu
+escritos|Quel livre de saint Josémaria contient 999 points de méditation ?|Chemin;Sillon;Forge;Chemin de Croix
+escritos|Quelle trilogie de courts livres rassemble des points pour la prière personnelle ?|Chemin, Sillon et Forge;Entretiens, Chemin et Saint Rosaire;Amis de Dieu, Sillon et Chemin de Croix;Forge, Quand le Christ passe et Aimer l’Église
+escritos|Quelle œuvre commente les mystères du Rosaire ?|Saint Rosaire;Chemin;Forge;Entretiens
+escritos|Quel livre rassemble des homélies sur les fêtes et les temps liturgiques ?|Quand le Christ passe;Chemin;L’Abbesse de Las Huelgas;Saint Rosaire
+escritos|Quel livre rassemble des homélies pour la vie chrétienne ordinaire ?|Amis de Dieu;Sillon;Chemin de Croix;Entretiens
+escritos|Quelle œuvre présente des entretiens avec saint Josémaria sur l’Opus Dei et l’Église ?|Entretiens;Forge;Chemin;Saint Rosaire
+escritos|Quel livre de saint Josémaria invite à méditer les stations de la Passion ?|Chemin de Croix;Sillon;Amis de Dieu;Quand le Christ passe
+escritos|Quelle expression célèbre apparaît au début de Chemin ?|Que ta vie ne soit pas une vie stérile;Tous les chemins de la terre;Ravive le don de Dieu;L’homme au sourire permanent
+escritos|Quel thème apparaît de manière centrale dans beaucoup d’écrits de saint Josémaria ?|La sanctification du travail ordinaire;Le retrait du monde;La politique comme but principal;La renommée personnelle
+escritos|Quel livre est né de notes et de considérations spirituelles écrites pendant des années ?|Chemin;L’Abbesse de Las Huelgas;Aimer l’Église;Entretiens
+escritos|Quelle œuvre traite spécialement de l’amour de l’Église ?|Aimer l’Église;Forge;Saint Rosaire;Sillon
+escritos|Quel livre a été publié après sa mort et fait partie de la trilogie avec Chemin et Sillon ?|Forge;Saint Rosaire;Entretiens;L’Abbesse de Las Huelgas
+escritos|Quelle œuvre de recherche historique saint Josémaria a-t-il écrite ?|L’Abbesse de Las Huelgas;Chemin;Sillon;Chemin de Croix
+escritos|À quoi servent principalement les points de Chemin, Sillon et Forge ?|À prier et à examiner sa vie;À étudier l’histoire médiévale;À apprendre la musique;À organiser une bibliothèque
+centenario|À quelle date est signé le message du Prélat sur le Chemin vers le Centenaire ?|19 mars 2026;2 octobre 2028;14 février 2030;10 juin 2021
+centenario|À l’occasion de quelle fête le message a-t-il été publié ?|La fête de saint Joseph;La fête de saint Josémaria;Noël;L’Assomption
+centenario|Comment saint Josémaria appelait-il saint Joseph selon le message ?|Mon père et seigneur;Mon maître et roi;Mon ami fidèle;Mon protecteur lointain
+centenario|Quelle phrase de saint Josémaria guide le chemin vers le Centenaire ?|Tout est fait et tout reste à faire;Duc in altum;Ora et labora;Paix et bien
+centenario|Quelle période couvrira la célébration du Centenaire ?|Du 2 octobre 2028 au 14 février 2030;Du 19 mars 2026 au 26 juin 2027;Seulement le 2 octobre 2028;Toute l’année 2026
+centenario|Qu’exprime cette période de cinq cents jours ?|L’unité des femmes et des hommes, des laïcs et des prêtres;Un changement de siège;Un congrès universitaire;La fin de la mission
+centenario|Quel fut le thème des dernières Assemblées régionales ?|Chemin vers le Centenaire;L’histoire de Rome;L’économie familiale;L’art chrétien
+centenario|Quels trois domaines ont particulièrement résonné dans les contributions ?|La famille, le travail et la formation;Le sport, l’étude et le repos;La liturgie, la musique et l’architecture;Les voyages, la culture et l’économie
+centenario|Comment le message souhaite-t-il regarder le passé et l’avenir ?|Avec gratitude, examen humble et espérance;Avec nostalgie et peur;Avec indifférence;Avec hâte et oubli
+centenario|Quel exemple propose-t-il de méditer pour la préparation spirituelle ?|Celui des premiers chrétiens;Celui des rois médiévaux;Celui des philosophes grecs;Celui des explorateurs
+centenario|Quelle idée propose-t-il d’approfondir du 2 octobre 2026 au 2 octobre 2027 ?|Être contemplatifs au milieu du monde;Vivre loin du travail;Changer de vocation;Étudier seulement des documents anciens
+centenario|Quel enseignement propose-t-il d’avoir davantage présent jusqu’au début du Centenaire ?|L’amitié et la confidence;La compétition et le succès;Le silence absolu;L’improvisation constante
+centenario|Sur quoi sommes-nous invités à méditer du 2 octobre 2028 au 14 février 2030 ?|Le travail à partir de la sécularité;La vie monastique;L’histoire de l’art;L’organisation de voyages
+centenario|Quelle phrase résume l’enseignement de saint Josémaria sur le travail ?|Sanctifier le travail, nous sanctifier par le travail, sanctifier les autres par le travail;Travailler seulement par obligation;Éviter les petites tâches;Séparer la foi de la vie quotidienne
+centenario|Quelle arme le message rappelle-t-il que nous avons depuis le début de l’Œuvre ?|La prière;La publicité;La force;La discussion`
+        };
+
+        function parseLocalizedTable(table) {
+            return table.trim().split('\n').reduce((banks, line) => {
+                const [category, question, optionsText] = line.split('|');
+                banks[category].push(q(question, optionsText.split(';')));
+                return banks;
+            }, { vida: [], escritos: [], centenario: [] });
+        }
+
+        function buildDefaultData() {
+            return { es: clone(spanishBanks), en: clone(translatedBanks.en), sk: parseLocalizedTable(localizedBankTables.sk), sl: parseLocalizedTable(localizedBankTables.sl), ptBR: parseLocalizedTable(localizedBankTables.ptBR), fr: parseLocalizedTable(localizedBankTables.fr) };
+        }
+
+        let questionBanks = loadStoredData();
+        let settings = loadStoredSettings();
+
         let questions = [];
         let selectedCategory = null;
+        let currentLanguage = 'es';
         let currentQuestionIndex = 0;
         let score = 0;
         let timeLeft = 20;
@@ -288,8 +597,96 @@
             return array;
         }
 
+        function loadStoredData() {
+            try {
+                return sanitizeQuestionBanks(mergeQuestionBanks(JSON.parse(localStorage.getItem(STORAGE_KEY)) || buildDefaultData()));
+            } catch {
+                return sanitizeQuestionBanks(mergeQuestionBanks(buildDefaultData()));
+            }
+        }
+
+        function mergeQuestionBanks(savedData) {
+            const defaults = buildDefaultData();
+            Object.keys(languages).forEach(language => {
+                savedData[language] = savedData[language] || defaults[language];
+                categories.forEach(category => {
+                    if (!savedData[language][category]?.length) savedData[language][category] = defaults[language][category];
+                });
+            });
+            return savedData;
+        }
+
+        function sanitizeQuestionBanks(data) {
+            Object.values(data).forEach(banks => {
+                Object.values(banks).forEach(items => {
+                    items.forEach(item => {
+                        item.q = cleanPersistedText(item.q);
+                        item.options = item.options.map(cleanPersistedText);
+                    });
+                });
+            });
+            return data;
+        }
+
+        function cleanPersistedText(value) {
+            return String(value ?? '').replace(/\[object Object\]/g, '').trim();
+        }
+
+        function loadStoredSettings() {
+            try {
+                return normalizeSettings(JSON.parse(localStorage.getItem(SETTINGS_KEY)));
+            } catch {
+                return normalizeSettings(null);
+            }
+        }
+
+        function normalizeSettings(savedSettings) {
+            const showAllCategories = savedSettings?.showCategoryButtons !== false;
+            const savedOrder = savedSettings?.languageOrder || Object.keys(languages);
+            const uniqueSavedOrder = [...new Set(savedOrder)].filter(code => languages[code]);
+            const languageOrder = [...uniqueSavedOrder, ...Object.keys(languages).filter(code => !uniqueSavedOrder.includes(code))];
+            const showAllLanguages = savedSettings?.showLanguageButtons !== false;
+            const visibleLanguages = Object.fromEntries(Object.keys(languages).map(code => [code, savedSettings?.visibleLanguages?.[code] ?? showAllLanguages]));
+            return {
+                languageOrder,
+                visibleLanguages,
+                visibleCategories: {
+                    vida: savedSettings?.visibleCategories?.vida ?? showAllCategories,
+                    escritos: savedSettings?.visibleCategories?.escritos ?? showAllCategories,
+                    centenario: savedSettings?.visibleCategories?.centenario ?? showAllCategories
+                }
+            };
+        }
+
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(questionBanks));
+        }
+
+        async function loadExternalCsv() {
+            try {
+                const response = await fetch(`${CSV_SOURCE}?v=${Date.now()}`, { cache: 'no-store' });
+                if (!response.ok) return false;
+                const csv = await response.text();
+                const imported = sanitizeQuestionBanks(csvToQuestionBanks(csv));
+                if (!hasQuestions(imported)) return false;
+                questionBanks = imported;
+                saveData();
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        function hasQuestions(data) {
+            return Object.values(data).some(banks => Object.values(banks).some(items => items.length));
+        }
+
+        function saveSettings() {
+            localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+        }
+
         function prepareQuestions(category) {
-            const newQuestions = JSON.parse(JSON.stringify(questionBanks[category]));
+            const newQuestions = clone(questionBanks[currentLanguage][category]);
             newQuestions.forEach(item => {
                 const correctAnswerText = item.options[item.correct];
                 shuffleOptions(item.options);
@@ -298,19 +695,17 @@
             return newQuestions;
         }
 
+        function selectLanguage(language) {
+            currentLanguage = language;
+            selectedCategory = null;
+            playShortSound('audio-click');
+            renderStartScreen();
+        }
+
         function selectCategory(category) {
             selectedCategory = category;
             playShortSound('audio-click');
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                const isSelected = btn.dataset.category === category;
-                btn.className = isSelected
-                    ? "category-btn w-full bg-[#46178f] text-white font-bold py-3 px-4 rounded-xl transition-all text-left ring-4 ring-[#d89e00]"
-                    : "category-btn w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 px-4 rounded-xl transition-all text-left";
-            });
-
-            const startBtn = document.getElementById('start-btn');
-            startBtn.disabled = false;
-            startBtn.className = "w-full bg-[#26890c] hover:bg-[#1f6d0a] text-white font-bold py-4 rounded-xl text-xl transition-all shadow-lg";
+            renderStartScreen();
         }
 
         function playShortSound(id) {
@@ -379,12 +774,7 @@
             document.getElementById('score').innerText = score;
             document.getElementById('score-mobile').innerText = score;
 
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.className = "category-btn w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 px-4 rounded-xl transition-all text-left";
-            });
-            const startBtn = document.getElementById('start-btn');
-            startBtn.disabled = true;
-            startBtn.className = "w-full bg-slate-300 text-white font-bold py-4 rounded-xl text-xl transition-all shadow-lg cursor-not-allowed";
+            renderStartScreen();
         }
 
         function loadQuestion() {
@@ -430,15 +820,15 @@
                 const pts = Math.round(timeLeft * 50);
                 score += pts;
                 feedbackIcon.innerHTML = '✅';
-                feedbackTitle.innerText = "¡Correcto!";
+                feedbackTitle.innerText = uiText[currentLanguage].correct;
                 feedbackTitle.className = "text-3xl font-black mb-2 text-green-600";
                 feedbackPoints.innerText = `+${pts} puntos`;
             } else {
                 playShortSound('audio-wrong');
                 feedbackIcon.innerHTML = '❌';
-                feedbackTitle.innerText = index === -1 ? "¡Tiempo!" : "¡Incorrecto!";
+                feedbackTitle.innerText = index === -1 ? uiText[currentLanguage].timeout : uiText[currentLanguage].wrong;
                 feedbackTitle.className = "text-3xl font-black mb-2 text-red-600";
-                feedbackPoints.innerText = "Sigue intentándolo.";
+                feedbackPoints.innerText = uiText[currentLanguage].keepTrying;
             }
 
             document.getElementById('score').innerText = score;
@@ -464,12 +854,261 @@
             
             let msg = "";
             const maxPoints = questions.length * 1000;
-            if (score > maxPoints * 0.8) msg = "¡Excelente! Has respondido con mucha precisión.";
-            else if (score > maxPoints * 0.5) msg = "¡Muy bien! Conoces bien a san Josemaría.";
-            else msg = "¡Sigue aprendiendo! Hay mucho por descubrir.";
+            if (score > maxPoints * 0.8) msg = uiText[currentLanguage].great;
+            else if (score > maxPoints * 0.5) msg = uiText[currentLanguage].good;
+            else msg = uiText[currentLanguage].learn;
             
             document.getElementById('rank-message').innerText = msg;
         }
+
+        function renderStartScreen() {
+            const visibleLanguages = settings.languageOrder.filter(code => settings.visibleLanguages[code]);
+            if (!settings.visibleLanguages[currentLanguage] && visibleLanguages.length) currentLanguage = visibleLanguages[0];
+            const text = uiText[currentLanguage];
+            document.documentElement.lang = currentLanguage === 'ptBR' ? 'pt-BR' : currentLanguage;
+            document.getElementById('subtitle').innerText = text.subtitle;
+            document.getElementById('language-label').innerText = text.language;
+            document.getElementById('category-label').innerText = text.category;
+            document.getElementById('start-btn').innerText = text.start;
+            document.getElementById('footer-text').innerText = text.footer;
+            document.getElementById('footer-date').innerText = text.date;
+            document.getElementById('exit-btn').innerText = text.exit;
+            document.getElementById('next-btn').innerText = text.next;
+            document.getElementById('final-label').innerText = text.final;
+            document.getElementById('home-btn').innerText = text.home;
+            document.getElementById('article-link-text').innerText = text.article;
+            document.querySelector('.hidden.sm\\:block').innerHTML = `${text.score}: <span id="score">${score}</span>`;
+
+            document.getElementById('language-section').classList.toggle('hidden', visibleLanguages.length === 0);
+            const languageButtons = document.getElementById('language-buttons');
+            languageButtons.innerHTML = '';
+            visibleLanguages.forEach(code => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => selectLanguage(code);
+                btn.className = code === currentLanguage ? 'bg-[#46178f] text-white font-bold py-2 px-3 rounded-xl ring-4 ring-[#d89e00]' : 'bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-2 px-3 rounded-xl';
+                btn.innerText = `${languageFlags[code]} ${languages[code]}`;
+                languageButtons.appendChild(btn);
+            });
+
+            const visibleCategories = categories.filter(category => settings.visibleCategories[category]);
+            if (selectedCategory && !settings.visibleCategories[selectedCategory]) selectedCategory = null;
+            document.getElementById('category-section').classList.toggle('hidden', visibleCategories.length === 0);
+            const categoryButtons = document.getElementById('category-buttons');
+            categoryButtons.innerHTML = '';
+            visibleCategories.forEach(category => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => selectCategory(category);
+                btn.className = category === selectedCategory ? 'category-btn w-full bg-[#46178f] text-white font-bold py-3 px-4 rounded-xl transition-all text-left ring-4 ring-[#d89e00]' : 'category-btn w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 px-4 rounded-xl transition-all text-left';
+                btn.innerText = categoryLabels[currentLanguage][category];
+                categoryButtons.appendChild(btn);
+            });
+
+            const startBtn = document.getElementById('start-btn');
+            startBtn.disabled = !selectedCategory;
+            startBtn.className = selectedCategory ? 'w-full bg-[#26890c] hover:bg-[#1f6d0a] text-white font-bold py-4 rounded-xl text-xl transition-all shadow-lg' : 'w-full bg-slate-300 text-white font-bold py-4 rounded-xl text-xl transition-all shadow-lg cursor-not-allowed';
+        }
+
+        function renderAdmin() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('admin-screen').classList.remove('hidden');
+            renderAdminCategoryVisibility();
+            renderAdminLanguageVisibility();
+
+            const languageSelect = document.getElementById('admin-language');
+            languageSelect.innerHTML = Object.entries(languages).map(([code, label]) => `<option value="${code}">${languageFlags[code]} ${label}</option>`).join('');
+            const categorySelect = document.getElementById('admin-category');
+            categorySelect.innerHTML = categories.map(category => `<option value="${category}">${categoryLabels.es[category]}</option>`).join('');
+            renderAdminQuestions();
+        }
+
+        function renderAdminCategoryVisibility() {
+            const container = document.getElementById('admin-category-visibility');
+            container.innerHTML = '';
+            categories.forEach(category => {
+                const label = document.createElement('label');
+                label.className = 'flex items-center gap-2';
+                label.innerHTML = `<input type="checkbox" data-category="${category}" onchange="saveAdminSettings()" ${settings.visibleCategories[category] ? 'checked' : ''}> ${categoryLabels.es[category]}`;
+                container.appendChild(label);
+            });
+        }
+
+        function renderAdminLanguageVisibility() {
+            const container = document.getElementById('admin-language-visibility');
+            container.innerHTML = '';
+            settings.languageOrder.forEach(code => {
+                const row = document.createElement('div');
+                row.className = 'admin-language-row flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 p-2 cursor-move';
+                row.draggable = true;
+                row.dataset.language = code;
+                row.innerHTML = `<span class="text-slate-400"><i class="fas fa-grip-vertical"></i></span><label class="flex items-center gap-2 flex-grow cursor-pointer"><input type="checkbox" data-language="${code}" onchange="saveAdminSettings()" ${settings.visibleLanguages[code] ? 'checked' : ''}> ${languageFlags[code]} ${languages[code]}</label>`;
+                row.addEventListener('dragstart', handleLanguageDragStart);
+                row.addEventListener('dragover', handleLanguageDragOver);
+                row.addEventListener('drop', handleLanguageDrop);
+                row.addEventListener('dragend', handleLanguageDragEnd);
+                container.appendChild(row);
+            });
+        }
+
+        function handleLanguageDragStart(event) {
+            event.currentTarget.classList.add('opacity-50');
+            event.dataTransfer.setData('text/plain', event.currentTarget.dataset.language);
+        }
+
+        function handleLanguageDragOver(event) {
+            event.preventDefault();
+        }
+
+        function handleLanguageDrop(event) {
+            event.preventDefault();
+            const dragged = event.dataTransfer.getData('text/plain');
+            const target = event.currentTarget.dataset.language;
+            if (!dragged || dragged === target) return;
+            const order = settings.languageOrder.filter(code => code !== dragged);
+            order.splice(order.indexOf(target), 0, dragged);
+            settings.languageOrder = order;
+            document.querySelectorAll('#admin-language-visibility input').forEach(input => {
+                settings.visibleLanguages[input.dataset.language] = input.checked;
+            });
+            saveSettings();
+            renderAdminLanguageVisibility();
+        }
+
+        function handleLanguageDragEnd(event) {
+            event.currentTarget.classList.remove('opacity-50');
+        }
+
+        function renderAdminQuestions() {
+            const language = document.getElementById('admin-language').value || 'es';
+            const category = document.getElementById('admin-category').value || 'vida';
+            const container = document.getElementById('admin-questions');
+            container.innerHTML = '';
+            questionBanks[language][category].forEach((item, index) => {
+                const block = document.createElement('div');
+                block.className = 'border rounded-2xl p-4 bg-slate-50';
+                block.innerHTML = `<h3 class="font-black text-[#46178f] mb-3">Pregunta ${index + 1}</h3>
+                    <label class="font-bold">Pregunta<input class="admin-input mt-1 admin-question" data-index="${index}" value="${escapeHtml(item.q)}"></label>
+                    <div class="grid md:grid-cols-2 gap-3 mt-3">
+                        ${item.options.map((option, optionIndex) => `<label class="font-bold">Respuesta ${optionIndex + 1}<input class="admin-input mt-1 admin-option" data-index="${index}" data-option="${optionIndex}" value="${escapeHtml(option)}"></label>`).join('')}
+                    </div>
+                    <label class="font-bold block mt-3">Respuesta correcta
+                        <select class="admin-input mt-1 admin-correct" data-index="${index}">${[0,1,2,3].map(value => `<option value="${value}" ${value === item.correct ? 'selected' : ''}>${value + 1}</option>`).join('')}</select>
+                    </label>`;
+                container.appendChild(block);
+            });
+        }
+
+        function saveAdminQuestions() {
+            const language = document.getElementById('admin-language').value;
+            const category = document.getElementById('admin-category').value;
+            const updated = clone(questionBanks[language][category]);
+            document.querySelectorAll('.admin-question').forEach(input => updated[input.dataset.index].q = input.value);
+            document.querySelectorAll('.admin-option').forEach(input => updated[input.dataset.index].options[input.dataset.option] = input.value);
+            document.querySelectorAll('.admin-correct').forEach(input => updated[input.dataset.index].correct = Number(input.value));
+            questionBanks[language][category] = updated;
+            saveData();
+            alert('Preguntas guardadas.');
+        }
+
+        function saveAdminSettings() {
+            document.querySelectorAll('#admin-category-visibility input').forEach(input => {
+                settings.visibleCategories[input.dataset.category] = input.checked;
+            });
+            document.querySelectorAll('#admin-language-visibility input').forEach(input => {
+                settings.visibleLanguages[input.dataset.language] = input.checked;
+            });
+            settings.languageOrder = Array.from(document.querySelectorAll('#admin-language-visibility .admin-language-row')).map(row => row.dataset.language);
+            saveSettings();
+        }
+
+        function exportCsv() {
+            const rows = [['language', 'category', 'question', 'option1', 'option2', 'option3', 'option4', 'correct']];
+            Object.entries(questionBanks).forEach(([language, banks]) => {
+                Object.entries(banks).forEach(([category, items]) => {
+                    items.forEach(item => rows.push([language, category, item.q, item.options[0], item.options[1], item.options[2], item.options[3], item.correct + 1]));
+                });
+            });
+            const csv = rows.map(row => row.map(csvEscape).join(',')).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'questions.csv';
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
+
+        function importCsv(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                questionBanks = sanitizeQuestionBanks(csvToQuestionBanks(reader.result));
+                saveData();
+                renderAdminQuestions();
+                alert('CSV importado. Las preguntas actuales han sido reemplazadas.');
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function csvToQuestionBanks(csv) {
+            const rows = parseCsv(csv).filter(row => row.length && row.some(cell => cell.trim() !== ''));
+            const imported = buildDefaultData();
+            Object.keys(imported).forEach(language => categories.forEach(category => imported[language][category] = []));
+            rows.slice(1).forEach(row => {
+                const [language, category, question, option1, option2, option3, option4, correct] = row;
+                if (!imported[language] || !categories.includes(category)) return;
+                imported[language][category].push({ q: question, options: [option1, option2, option3, option4], correct: Math.max(0, Math.min(3, Number(correct) - 1 || 0)) });
+            });
+            return imported;
+        }
+
+        function resetAdminData() {
+            if (!confirm('¿Restaurar preguntas y traducciones iniciales?')) return;
+            questionBanks = buildDefaultData();
+            saveData();
+            renderAdminQuestions();
+        }
+
+        function csvEscape(value) {
+            return `"${String(value ?? '').replace(/"/g, '""')}"`;
+        }
+
+        function parseCsv(text) {
+            const rows = [];
+            let row = [], value = '', inQuotes = false;
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                const next = text[i + 1];
+                if (char === '"' && inQuotes && next === '"') { value += '"'; i++; }
+                else if (char === '"') inQuotes = !inQuotes;
+                else if (char === ',' && !inQuotes) { row.push(value); value = ''; }
+                else if ((char === '\n' || char === '\r') && !inQuotes) {
+                    if (char === '\r' && next === '\n') i++;
+                    row.push(value); rows.push(row); row = []; value = '';
+                } else value += char;
+            }
+            row.push(value); rows.push(row);
+            return rows;
+        }
+
+        function escapeHtml(value) {
+            return String(value).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        async function initApp() {
+            await loadExternalCsv();
+            if (new URLSearchParams(window.location.search).get('rol') === 'admin') {
+                renderAdmin();
+            } else {
+                renderStartScreen();
+            }
+        }
+
+        initApp();
     </script>
 </body>
 </html>
