@@ -242,12 +242,15 @@
                 <div class="border rounded-2xl p-4">
                     <h2 class="font-black text-xl mb-3">CSV</h2>
                     <div class="flex flex-wrap gap-2">
-                        <button onclick="exportCsv()" class="bg-[#26890c] text-white font-bold py-2 px-4 rounded-lg">Exportar CSV</button>
-                        <label class="bg-[#1368ce] text-white font-bold py-2 px-4 rounded-lg cursor-pointer">Importar CSV<input type="file" accept=".csv,text/csv" class="hidden" onchange="importCsv(event)"></label>
+                        <button onclick="exportCsv()" class="bg-[#26890c] text-white font-bold py-2 px-4 rounded-lg">Exportar preguntas</button>
+                        <label class="bg-[#1368ce] text-white font-bold py-2 px-4 rounded-lg cursor-pointer">Importar preguntas<input type="file" accept=".csv,text/csv" class="hidden" onchange="importCsv(event)"></label>
+                        <button onclick="exportSettingsCsv()" class="bg-[#d89e00] text-white font-bold py-2 px-4 rounded-lg">Exportar configuración</button>
+                        <label class="bg-[#46178f] text-white font-bold py-2 px-4 rounded-lg cursor-pointer">Importar configuración<input type="file" accept=".csv,text/csv" class="hidden" onchange="importSettingsCsv(event)"></label>
                         <button onclick="resetAdminData()" class="bg-[#e21b3c] text-white font-bold py-2 px-4 rounded-lg">Restaurar inicial</button>
                     </div>
-                    <p class="text-xs text-slate-500 mt-3">Formato: language, category, question, option1, option2, option3, option4, correct.</p>
-                    <p class="text-xs text-slate-500 mt-1">Para usarlo como banco definitivo en el servidor, sube el CSV exportado como <strong>questions.csv</strong> en la misma carpeta que <strong>index.html</strong>.</p>
+                    <p class="text-xs text-slate-500 mt-3">Preguntas: language, category, question, option1, option2, option3, option4, correct.</p>
+                    <p class="text-xs text-slate-500 mt-1">Configuración: type, key, visible, order.</p>
+                    <p class="text-xs text-slate-500 mt-1">Sube <strong>questions.csv</strong> y <strong>settings.csv</strong> en la misma carpeta que <strong>index.html</strong>.</p>
                 </div>
             </div>
 
@@ -677,6 +680,18 @@ centenario|Quelle arme le message rappelle-t-il que nous avons depuis le début 
             }
         }
 
+        async function loadExternalSettingsCsv() {
+            try {
+                const response = await fetch(`${SETTINGS_CSV_SOURCE}?v=${Date.now()}`, { cache: 'no-store' });
+                if (!response.ok) return false;
+                settings = settingsCsvToSettings(await response.text());
+                saveSettings();
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
         function hasQuestions(data) {
             return Object.values(data).some(banks => Object.values(banks).some(items => items.length));
         }
@@ -1040,6 +1055,42 @@ centenario|Quelle arme le message rappelle-t-il que nous avons depuis le début 
             URL.revokeObjectURL(link.href);
         }
 
+        function exportSettingsCsv() {
+            downloadCsv('settings.csv', settingsToCsv(settings));
+        }
+
+        function settingsToCsv(currentSettings) {
+            const rows = [['type', 'key', 'visible', 'order']];
+            categories.forEach(category => rows.push(['category', category, currentSettings.visibleCategories[category] ? '1' : '0', '']));
+            currentSettings.languageOrder.forEach((language, index) => rows.push(['language', language, currentSettings.visibleLanguages[language] ? '1' : '0', index + 1]));
+            return rows.map(row => row.map(csvEscape).join(',')).join('\n') + '\n';
+        }
+
+        function settingsCsvToSettings(csv) {
+            const imported = normalizeSettings(null);
+            const languageOrder = [];
+            parseCsv(csv).filter(row => row.length && row.some(cell => cell.trim() !== '')).slice(1).forEach(row => {
+                const [type, key, visible = '1'] = row;
+                const isVisible = visible !== '0' && String(visible).toLowerCase() !== 'false';
+                if (type === 'category' && categories.includes(key)) imported.visibleCategories[key] = isVisible;
+                if (type === 'language' && languages[key]) {
+                    imported.visibleLanguages[key] = isVisible;
+                    languageOrder.push(key);
+                }
+            });
+            imported.languageOrder = [...new Set(languageOrder)].filter(code => languages[code]);
+            return normalizeSettings(imported);
+        }
+
+        function downloadCsv(filename, csv) {
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
+
         function importCsv(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1049,6 +1100,21 @@ centenario|Quelle arme le message rappelle-t-il que nous avons depuis le début 
                 saveData();
                 renderAdminQuestions();
                 alert('CSV importado. Las preguntas actuales han sido reemplazadas.');
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function importSettingsCsv(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                settings = settingsCsvToSettings(reader.result);
+                saveSettings();
+                renderAdminCategoryVisibility();
+                renderAdminLanguageVisibility();
+                alert('Configuración importada.');
             };
             reader.readAsText(file);
             event.target.value = '';
@@ -1101,6 +1167,7 @@ centenario|Quelle arme le message rappelle-t-il que nous avons depuis le début 
 
         async function initApp() {
             await loadExternalCsv();
+            await loadExternalSettingsCsv();
             if (new URLSearchParams(window.location.search).get('rol') === 'admin') {
                 renderAdmin();
             } else {
