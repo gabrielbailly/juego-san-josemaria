@@ -40,6 +40,5 @@ python3 -m http.server 8000
 URLs locales:
 
 - Juego: `http://localhost:8000/`
-- Admin: `http://localhost:8000/?rol=admin`
 
 Es mejor probar con servidor local y no abriendo el archivo directamente, porque así `questions.csv` se carga igual que en producción.
